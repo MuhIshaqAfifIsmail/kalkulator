@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>First Project Calculator</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #1c1c1c;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  width: 360px;
+  background: #dcdcdc;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.toggle {
+  background: black;
+  color: white;
+  border-radius: 20px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/* DISPLAY */
+.display {
+  background: #eee;
+  margin: 10px;
+  padding: 15px;
+  border-radius: 10px;
+  min-height: 80px;
+  text-align: right;
+}
+
+#input {
+  font-size: 18px;
+  color: gray;
+}
+
+#result {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+/* BUTTONS */
+.buttons {
+  padding: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.standard {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.scientific {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+button {
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  background: #cfcfcf;
+}
+
+button.operator {
+  background: #444;
+  color: white;
+}
+
+button.equal {
+  background: #4aa3d1;
+  color: white;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    FIRST PROJECT
+    <div class="toggle" onclick="toggleMode()">Standard</div>
+  </div>
+
+  <!-- DISPLAY -->
+  <div class="display">
+    <div id="input"></div>
+    <div id="result">0</div>
+  </div>
+
+  <!-- BUTTONS -->
+  <div id="buttons" class="buttons standard"></div>
+
+</div>
+
+<script>
+let mode = "standard";
+let input = "";
+
+const buttonsContainer = document.getElementById("buttons");
+
+function renderButtons() {
+  buttonsContainer.innerHTML = "";
+
+  let buttons = [];
+
+  if (mode === "standard") {
+    buttons = [
+    "C","(",")","⌫",
+    "7","8","9","/",
+    "4","5","6","*",
+    "1","2","3","-",
+    "0",".","=","+"
+  ];
+    buttonsContainer.className = "buttons standard";
+  } else {
+    buttons = [
+      "2nd","π","e","C","",
+      "x²","1/x","|x|","exp","mod",
+      "√","(",")","n!","/",
+      "xʸ","7","8","9","*",
+      "10ˣ","4","5","6","-",
+      "log","1","2","3","+",
+      "ln","+/-","0",".","="
+    ];
+    buttonsContainer.className = "buttons scientific";
+  }
+
+  buttons.forEach(b => {
+    const btn = document.createElement("button");
+    btn.innerText = b;
+
+    if (["/","*","-","+"].includes(b)) btn.classList.add("operator");
+    if (b === "=") btn.classList.add("equal");
+
+    btn.onclick = () => handleClick(b);
+
+    buttonsContainer.appendChild(btn);
+  });
+}
+
+function handleClick(value) {
+  const inputEl = document.getElementById("input");
+  const resultEl = document.getElementById("result");
+
+  if (value === "C") {
+    input = "";
+    inputEl.innerText = "";
+    resultEl.innerText = "0"; // FIX: reset hasil juga
+    return;
+  }
+
+  if (value === "=") {
+    try {
+      input = eval(input).toString();
+      resultEl.innerText = input;
+      inputEl.innerText = input;
+      return;
+    } catch {
+      input = "";
+      resultEl.innerText = "Error";
+      inputEl.innerText = "";
+      return;
+    }
+  }
+
+  if (value === "⌫") {
+    input = input.slice(0, -1);
+  } else {
+    input += value;
+  }
+
+  inputEl.innerText = input;
+}
+
+function toggleMode() {
+  mode = mode === "standard" ? "scientific" : "standard";
+  document.querySelector(".toggle").innerText =
+    mode === "standard" ? "Standard" : "Scientific";
+  renderButtons();
+}
+
+renderButtons();
+</script>
+
+</body>
+</html>
