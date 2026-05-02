@@ -1,1 +1,1 @@
-# kalkulator
+# only run in local
